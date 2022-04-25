@@ -1,0 +1,146 @@
+<html>
+    <head>
+        <title>Jogo da Velha</title>
+        <style>
+            .topo {
+                width: 450; height: 90px; margin:auto; 
+                text-align: center;
+            }
+            .topo img {
+                width: 20px; height: 20px;
+            }
+            .tabuleiro {
+                width: 370px; margin: auto;
+                border: 2px solid black;
+                border-radius: 20px;
+                background-color: rgb(65, 62, 62);
+            }
+            .casa {
+                background-color: rgb(12, 112, 243);
+                width: 110px; height: 110px;
+                margin: 5px; border-radius: 10px;
+                text-align: center; vertical-align: middle;
+            }
+            .reset {
+                background-color: rgb(255, 51, 0); color:white;
+                border-radius: 20px;
+                font-family;
+                width:115px; margin-left: 125px; margin-bottom: 5px;
+            }
+            button img {
+                width: 70px; height: 70px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="topo">
+            <h1>Jogo da Velha</h1>
+            <p id="mensagem">Mensagem do jogo (vez/fim)</p>
+        </div>
+        <div class="tabuleiro">
+                <button id="0" class="casa" onclick="jogada(0)"></button>
+                <button id="1" class="casa" onclick="jogada(1)"></button>
+                <button id="2" class="casa" onclick="jogada(2)"></button>
+                <br>
+                <button id="3" class="casa" onclick="jogada(3)"></button>
+                <button id="4" class="casa" onclick="jogada(4)"></button>
+                <button id="5" class="casa" onclick="jogada(5)"></button>
+                <br>
+                <button id="6" class="casa" onclick="jogada(6)"></button>
+                <button id="7" class="casa" onclick="jogada(7)"></button>
+                <button id="8" class="casa" onclick="jogada(8)"></button>
+                <br>
+                <button class="reset"
+                        onclick="reinicia()">Reiniciar</button>                
+        </div>
+
+        <script>
+            // --- inicialização das variáveis do jogo ---
+            var jog = "x";     // identificação do jogador  
+            var tab = [8];     // criação do array de tabuleiro (vazio)
+            // primeiro aviso de quem é a vez de jogar
+            document.getElementById('mensagem').innerHTML = 
+                    "É a vez do jogador <img src='"+ jog +".png'>";
+
+            // --- funcão que processa uma jogada ---
+            // --- (executada quando se aperta um botão)
+            function jogada(bt){
+                // testa se a casa está ocupada (se o botão já havia sido escolhido antes)
+                if ((tab[bt] == 'x') || (tab[bt] == 'o')) {
+                    alert ('Lamento, mas essa casa já foi ocupada.');
+                } else {
+                    // ocupa a casa no array e desenha símbolo do jogador no botão
+                    document.getElementById(bt).innerHTML = "<img src='"+ jog +".png'>";
+                    tab[bt] = jog;
+                    
+                    // testa se o jogo acabou
+                    if (vencedor(jog)) {
+                        document.getElementById('mensagem').innerHTML = 
+                            "O jogador <img src='"+ jog +".png'> venceu!!!";
+                    } else { 
+                        // testa se foi empate (não há mais casas disponíveis)
+                        if (ocupadas() == 9) {   // não há mais jogadas disponíveis
+                            document.getElementById('mensagem').innerHTML = 
+                                "O jogo empatou!!!";
+                        } else {          // o jogo continua
+                            // muda o jogador
+                            if (jog == "x") { 
+                                jog = "o"; 
+                            } else { 
+                                jog = "x"; 
+                            }
+                            // muda jogador no aviso
+                            document.getElementById('mensagem').innerHTML = 
+                                "É a vez do jogador <img src='"+ jog +".png'>";
+                        }
+                    }               
+                }
+            }
+
+            // --- funcão que testa se o jogador venceu ---
+            function vencedor(j) {
+                var result = false;
+
+                // testa se alguma linha é toda igual ao jogador
+                for (var i = 0; i < 7; i+=3) {
+                    if ((tab[i] == tab[i+1]) && (tab[i] == tab[i+2]) && (tab[i] == j)) {
+                        result = true;
+                        break;
+                    }
+                }
+                // testa se alguma coluna é toda igual ao jogador
+                for (i = 0; i < 3; i++) {
+                    if ((tab[i] == tab[i+3]) && (tab[i] == tab[i+6]) && (tab[i] == j)) {
+                        result = true;
+                        break;
+                    }
+                }
+                // testa se alguma diagonal é toda igual ao jogador
+                if ((tab[0] == tab[4]) && (tab[4] == tab[8]) && (tab[8] == j)) {
+                    result = true;
+                }
+                if ((tab[2] == tab[4]) && (tab[4] == tab[6]) && (tab[6] == j)) {
+                    result = true;
+                } 
+                // restorna se jogador venceu (true) ou não (false)
+                return result;
+            }
+
+            // --- funcão que testa se o jogador venceu ---
+            function ocupadas() {
+                var qtd = 0;
+                    for (var e = 0; e < 9; e++) {
+                        if ((tab[e] == "x") || (tab[e] == "o")) {
+                            qtd ++;
+                        }
+                    }
+                return qtd;
+            }
+
+            // --- funcão que recarrega a página (reinicia o jogo) ---
+            function reinicia() {
+                window.location.reload();
+            }
+       </script>
+    </body>
+</html>
